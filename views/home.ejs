@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLS</title>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .main--wrapper {
+        padding: 0 20px;
+        height: 100vh;
+      }
+      .bgwrapper {
+        position: absolute;
+        z-index: -1;
+        opacity: 0.5;
+        left: -105px;
+        bottom: -93px;
+      }
+      .bgwrapper svg {
+        display: block;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        font-family: "Poppins", sans-serif;
+        background-color: #fdfdfd9f;
+        padding: 20px 20px 120px;
+        gap: 24px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        max-width: 1250px;
+        margin: 20px auto;
+        color: #444;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .heading h1 {
+        margin-top: 15px;
+        margin-bottom: 0;
+        text-align: center;
+        font-weight: 600;
+      }
+      .heading p {
+        margin-top: 5px;
+        margin-bottom: 70px;
+        text-align: center;
+      }
+
+      .output-boxes {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 20px;
+        gap: 5px;
+      }
+
+      .output-box {
+        flex: 1;
+        padding: 15px;
+        background-color: white;
+        /* border: 1px solid #004aad; */
+        font-size: 16px;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        overflow-wrap: break-word;
+        min-height: 120px;
+      }
+
+      .output-box p {
+        margin: 15px 0 0 0;
+        font-size: 14px;
+        color: #004aad;
+      }
+
+      .output-box .output-heading {
+        width: 100%;
+        border-bottom: 1px solid #004aad2f;
+        margin: 0;
+        padding: 0 0 10px;
+        text-align: left;
+        text-indent: 10px;
+      }
+
+      .output-box:first-child {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        position: relative;
+      }
+
+      .output-box:first-child::after {
+        content: "\2192";
+        letter-spacing: -6px;
+        position: absolute;
+        right: -2%;
+        top: 50%;
+        transform: translateY(-10%);
+        width: fit-content;
+        height: auto;
+        font-weight: 500;
+        font-size: 32px;
+      }
+
+      .output-box:last-child {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+      }
+
+      .output-box:has(#reaction) {
+        flex: 1 0 17%;
+      }
+
+      .output-box:hover {
+        background-color: #d4e8ff;
+      }
+
+      .test-tubes {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 10px;
+        gap: 8%;
+      }
+
+      .test-tube {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        flex: 0 1 40%;
+      }
+
+      .test-tube .instruction {
+        position: absolute;
+        bottom: -60px;
+        opacity: 0.8;
+        font-size: 15px;
+      }
+
+      .tube {
+        width: 50px;
+        height: 200px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0) 100%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        border: 3px solid #b0bec5;
+        border-radius: 25px 25px 100px 100px;
+        position: relative;
+      }
+
+      .tube::before {
+        content: "";
+        width: 60px;
+        height: 4px;
+        border: 3px solid #b0bec5;
+        border-radius: 30px;
+        background-color: #e0e4f4;
+        position: absolute;
+        top: -8px;
+        left: -8px;
+      }
+
+      select {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #ffffff;
+        color: #333;
+        cursor: pointer;
+        outline: none;
+        text-align: center;
+        position: relative;
+        font-family: "Poppins", sans-serif; /* Added Poppins font */
+      }
+
+      select:hover {
+        background-color: #f0f4ff;
+        border-color: #004aad;
+      }
+      .test-tube:last-child {
+        flex: 0 0 20%;
+      }
+      .test-tube:first-of-type:after {
+        content: "+";
+        position: absolute;
+        right: -13%;
+        bottom: 0;
+        width: fit-content;
+        height: 30px;
+        font-weight: 500;
+      }
+
+      .test-tube:nth-child(2):after {
+        content: "\2192";
+        letter-spacing: -5px;
+        position: absolute;
+        right: -13%;
+        bottom: 4px;
+        width: fit-content;
+        height: auto;
+        font-weight: 500;
+        font-size: 24px;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #ffffff;
+        background-color: #004aad;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #00307d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main--wrapper">
+      <div class="container">
+        <div class="bgwrapper">
+          <svg
+            width="1512"
+            height="835"
+            viewBox="0 0 1512 835"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 92.2389C0 92.2389 236.069 111.349 388.549 112.143C660.712 113.56 906.478 44.4028 1178.5 49.1245C1349.88 52.0994 1512 92.2389 1512 92.2389V834.125H0V92.2389Z"
+              fill="#C0D0EF"
+            />
+            <path
+              opacity="0.45"
+              d="M1512 92.2389C1512 92.2389 1275.93 111.349 1123.45 112.143C851.288 113.56 573.522 25.9028 301.5 30.6245C130.116 33.5994 0 92.2389 0 92.2389V834.124H1512V92.2389Z"
+              fill="#C0D0EF"
+            />
+            <path
+              opacity="0.45"
+              d="M0 91.923C0 91.923 386.52 124.331 539 125.125C811.163 126.542 915.478 -4.59724 1187.5 0.124523C1358.88 3.09941 1512 91.923 1512 91.923V833.809H0V91.923Z"
+              fill="#C0D0EF"
+            />
+          </svg>
+        </div>
+        <div class="heading">
+          <h1>Chemistry Lab Simulator</h1>
+          <p>Making Chemistry fun!</p>
+        </div>
+        <div class="output-boxes">
+          <div class="output-box">
+            <p class="output-heading">Reaction:</p>
+            <p id="reaction"></p>
+          </div>
+          <div class="output-box">
+            <p class="output-heading">Product:</p>
+            <p id="product"></p>
+          </div>
+        </div>
+
+        <div class="test-tubes">
+          <div class="test-tube">
+            <div class="tubetop"></div>
+            <div id="chemical1_tube" class="tube"></div>
+            <br />
+            <select id="chemical1">
+              <option selected>Random Chemical</option>
+              <% list.forEach((chemical) => { %>
+              <option value="<%= chemical[0] %>"><%= chemical[0] %></option>
+              <% }) %>
+            </select>
+            <p class="instruction">1. Select the first chemical</p>
+          </div>
+
+          <div class="test-tube">
+            <div class="tubetop"></div>
+            <div id="chemical2_tube" class="tube"></div>
+            <br />
+            <select id="chemical2">
+              <option selected>Random Chemical</option>
+              <% list.forEach((chemical) => { %>
+              <option value="<%= chemical[0] %>"><%= chemical[0] %></option>
+              <% }) %>
+            </select>
+            <p class="instruction">2. Add the second chemical</p>
+          </div>
+
+          <div class="test-tube">
+            <div class="tubetop"></div>
+            <div id="mixture_tube" class="tube"></div>
+            <br />
+            <button
+              id="mixbutton"
+              onclick="
+                    socket.emit('mix', [document.getElementById('chemical1').value, document.getElementById('chemical2').value])
+                "
+            >
+              Mix
+            </button>
+            <p class="instruction">3. Mix to see the results</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const socket = io("http://localhost:3000");
+
+    socket.on("result", (data) => {
+      let chemicalReaction = data[0];
+      let color = data[1];
+      let product = data[2];
+
+      // const utterance = new SpeechSynthesisUtterance(chemicalReaction);
+      // speechSynthesis.speak(utterance);
+
+      document.getElementById("reaction").innerText = chemicalReaction;
+      document.getElementById("mixture_tube").style.background =
+        "linear-gradient(180deg, rgba(255, 255, 255, 0.00) 45.5%, " +
+        color +
+        " 100%)";
+      document.getElementById("product").innerText = product;
+    });
+
+    document.getElementById("chemical1").addEventListener("change", (event) => {
+      socket.emit("change_color1", event.target.value);
+    });
+    socket.on("act_change_color1", (data) => {
+      document.getElementById("chemical1_tube").style.background =
+        "linear-gradient(180deg, rgba(255, 255, 255, 0.00) 45.5%, " +
+        data +
+        " 100%)";
+    });
+
+    document.getElementById("chemical2").addEventListener("change", (event) => {
+      socket.emit("change_color2", event.target.value);
+    });
+    socket.on("act_change_color2", (data) => {
+      document.getElementById("chemical2_tube").style.background =
+        "linear-gradient(180deg, rgba(255, 255, 255, 0.00) 45.5%, " +
+        data +
+        " 100%)";
+    });
+  </script>
+</html>
