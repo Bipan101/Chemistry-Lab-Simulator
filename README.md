@@ -104,7 +104,8 @@ Contributions are welcome! Please fork the repository and create a pull request 
 ---
 
 ## License
-This project is licensed under the MIT License. See the `License`(./License.md) file for more details.
+## License
+This project is licensed under the MIT License. See the [`License.md`](./License.md) file for more details.
 
 ---
 
