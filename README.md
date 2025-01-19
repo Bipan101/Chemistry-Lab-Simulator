@@ -1,7 +1,7 @@
-# Bipan101 Chemistry Lab Simulator
+# Chemistry Lab Simulator
 
 ## Overview
-The **Bipan101 Chemistry Lab Simulator** is a web-based platform designed to simulate chemistry lab experiments. It integrates Arduino components to enhance the simulation experience, making it interactive and educational.
+The **Chemistry Lab Simulator** is a web-based platform designed to simulate chemistry lab experiments. It integrates Arduino components to enhance the simulation experience, making it interactive and educational.
 
 ---
 
@@ -9,6 +9,7 @@ The **Bipan101 Chemistry Lab Simulator** is a web-based platform designed to sim
 ```
 └── bipan101-chemistry-lab-simulator/
     ├── README.md               # Documentation for the project
+    ├── License                 # Licensing information for the project
     ├── functions.js            # Core JavaScript functions for the simulator
     ├── package.json            # Dependencies and project metadata
     ├── server.js               # Main server file to start the application
@@ -64,6 +65,7 @@ The **Bipan101 Chemistry Lab Simulator** is a web-based platform designed to sim
 
 ### Root Files
 - **`README.md`**: This documentation file.
+- **`License`**: Licensing information for the project.
 - **`functions.js`**: Contains core functions used across the project.
 - **`package.json`**: Lists the dependencies and scripts for the project.
 - **`server.js`**: The main server file to start and configure the application.
